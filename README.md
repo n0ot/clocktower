@@ -14,9 +14,14 @@ I tried to follow the format as described by [WWV's Wikipedia page](https://en.w
 * In a "production" environment, very low latencies are super critical for these kinds of applications. I tried to get the lowest latency as I could,
     but getting delays down to the nanosecond level seems impossible. Perhaps there is a way to sync the clock with the hardware playback, but that is beyond my knowledge at the moment.
 
+## Cloning
+Clocktower contains pre-recorded time announcements stored in wave files.
+These files are stored in [Git Large File Storage](https://git-lfs.github.com/), rather than in the repository itself.
+To download the wave files when you clone, you first need to install Git-LFS.
+
 ## Building
-You need to install the version of [Go](https://golang.org/dl/) for your operating system.
-Clocktower depends on [PortAudio](http://www.portaudio.com/). You need to have the PortAudio development headers installed.
+Install the version of [Go](https://golang.org/dl/) for your operating system.
+Clocktower depends on [PortAudio](http://www.portaudio.com/). The PortAudio development headers must be installed.
 On Ubuntu, you can run
 
     apt-get install portaudio19-dev
@@ -26,6 +31,8 @@ Or on Mac with [Homebrew](https://brew.sh/):
     brew install portaudio
 
 Installation instructions will vary across different operating systems, and you may need to build from source.
+
+With Go, the PortAudio development headers, and git-lfs installed, run
 
     go get -u github.com/n0ot/clocktower
 
