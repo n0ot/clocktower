@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"syscall"
 
 	"github.com/gordonklaus/portaudio"
 	"github.com/n0ot/clocktower"
@@ -54,7 +53,7 @@ func main() {
 	go playLive(*amplitudeDBFS, stopCh)
 
 	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(sigs, os.Interrupt)
 	<-sigs
 	fmt.Println("Done")
 	close(stopCh)
