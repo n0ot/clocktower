@@ -21,18 +21,8 @@ To download the wave files when you clone, you first need to install Git-LFS.
 
 ## Building
 Install the version of [Go](https://golang.org/dl/) for your operating system.
-Clocktower depends on [PortAudio](http://www.portaudio.com/). The PortAudio development headers must be installed.
-On Ubuntu, you can run
 
-    apt-get install portaudio19-dev
-
-Or on Mac with [Homebrew](https://brew.sh/):
-
-    brew install portaudio
-
-Installation instructions will vary across different operating systems, and you may need to build from source.
-
-With Go, the PortAudio development headers, and git-lfs installed, run
+With Go and git-lfs installed, run
 
     go get -u github.com/n0ot/clocktower
 
@@ -40,17 +30,22 @@ In clocktower/cmd/clocktower:
 
     go build && go install
 
+The announcements directory must be in the current working directory.
+
 ## Usage
-Just running
+Clocktower sends its generated audio to standard output. To play the audio, pipe it to another program that can play it like [SoX](http://sox.sourceforge.net/).
+The audio is PCM float 32, 44.1 kHz mono.
 
-    clocktower
+Try:
 
-will play the clock. If you'd like to make it quieter, run
+    clocktower | play -t raw -e float -b 32 -r 44100 -c 1 -
+    clocktower -amplitude -12 | play -t raw -e float -b 32 -r 44100 -c 1 -  # Quieter, amplitude is in dB.
 
-    clocktower -amplitude -12
+If you want to encode the audio for streaming, and your encoder does not support floating samples, use SoX first to convert.
 
-Run
+    clocktower | \
+        sox -t raw -e float -b 32 -r 44100 -c 1 - -t s16 - | \
+        opusenc --bitrate 32 --raw --raw-rate 44100 --raw-chan 1 - - | \
+        ezstream -c clocktower_opus_stream.xml # Stream online as 32 Kbps mono Opus.
 
-    clocktower -h
-
-for help.
+Streaming online will introduce significantly greater delay.
